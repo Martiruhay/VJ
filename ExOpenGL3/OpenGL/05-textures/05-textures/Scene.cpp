@@ -51,6 +51,7 @@ void Scene::update(int deltaTime)
 void Scene::render()
 {
 	float move = sin(currentTime / 1000.f);
+	float scale = sin(currentTime / 150.f)/10.f + 0.9f;
 
 	glm::mat4 modelview;
 
@@ -82,6 +83,7 @@ void Scene::render()
 	modelview = glm::translate(modelview, glm::vec3(CAMERA_WIDTH / 2.f - 64, 304.f, 0.f));
 	modelview = glm::translate(modelview, glm::vec3(64.f, 64.f, 0.f));
 	//modelview = glm::rotate(modelview, currentTime / 1000.f, glm::vec3(0.0f, 0.0f, 1.0f));
+	modelview = glm::scale(modelview, glm::vec3(scale, scale, 1.f));
 	modelview = glm::translate(modelview, glm::vec3(-64.f, -64.f, 0.f));
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texQuad[0]->render(texs[0]);
