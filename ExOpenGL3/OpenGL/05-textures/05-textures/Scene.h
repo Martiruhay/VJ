@@ -32,8 +32,8 @@ private:
 
 private:
 	Quad *quad;
-	Texture texs[2];
-	TexturedQuad *texQuad[3];
+	Texture texs[4];
+	TexturedQuad *texQuad[5];
 	ShaderProgram simpleProgram, texProgram;
 	float currentTime;
 	glm::mat4 projection;
