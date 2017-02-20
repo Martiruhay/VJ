@@ -25,41 +25,18 @@ void Scene::init()
 	glm::vec2 texCoords[2] = {glm::vec2(0.f, 0.f), glm::vec2(1.f, 1.f)};
 
 	initShaders();
-
-	/*quad = Quad::createQuad(0.f, 0.f, 128.f, 128.f, simpleProgram);
+	quad = Quad::createQuad(0.f, 0.f, 128.f, 128.f, simpleProgram);
 	texCoords[0] = glm::vec2(0.f, 0.f); texCoords[1] = glm::vec2(0.5f, 0.5f);
 	texQuad[0] = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
 	texCoords[0] = glm::vec2(0.5f, 0.5f); texCoords[1] = glm::vec2(1.f, 1.f);
 	texQuad[1] = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
 	texCoords[0] = glm::vec2(0.f, 0.f); texCoords[1] = glm::vec2(2.f, 2.f);
-	texQuad[2] = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);*/
-
-	//Bolet
-	texCoords[0] = glm::vec2(0.f, 0.5f); texCoords[1] = glm::vec2(0.5f, 1.f);
-	texQuad[0] = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
-	//Terra
-	texCoords[0] = glm::vec2(0.f, 0.f); texCoords[1] = glm::vec2(5.f, 1.f);
 	texQuad[2] = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
-	//Mr.Orange
-	texCoords[0] = glm::vec2(0.f, 0.f); texCoords[1] = glm::vec2(1.f, 1.f);
-	texQuad[3] = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
-	//Mario
-	geom[0] = glm::vec2(0.f, 0.f); geom[1] = glm::vec2(128.f, 128.f);
-	texCoords[0] = glm::vec2(0.f, 0.f); texCoords[1] = glm::vec2(0.5f, 0.5f);
-	texQuad[1] = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
-	//Clouds
-	geom[0] = glm::vec2(0.f, 0.f); geom[1] = glm::vec2(CAMERA_WIDTH, CAMERA_HEIGHT);
-	texCoords[0] = glm::vec2(0.f, 0.f); texCoords[1] = glm::vec2(1.f, 1.f);
-	texQuad[4] = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
 	// Load textures
 	texs[0].loadFromFile("images/varied.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	texs[0].setMagFilter(GL_NEAREST);
 	texs[1].loadFromFile("images/rocks.jpg", TEXTURE_PIXEL_FORMAT_RGB);
 	texs[1].setMagFilter(GL_NEAREST);
-	texs[2].loadFromFile("images/pj4.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	//texs[2].setMagFilter(GL_NEAREST);
-	texs[3].loadFromFile("images/clouds.jpg", TEXTURE_PIXEL_FORMAT_RGB);
-	//texs[3].setMagFilter(GL_NEAREST);
 	projection = glm::ortho(0.f, float(CAMERA_WIDTH - 1), float(CAMERA_HEIGHT - 1), 0.f);
 	currentTime = 0.0f;
 	
@@ -77,15 +54,12 @@ void Scene::update(int deltaTime)
 
 void Scene::render()
 {
-	float move = sin(currentTime / 1000.f);
-	float scale = sin(currentTime / 150.f) / 10.f + 0.9f;
-
 	glm::mat4 modelview;
 
 	simpleProgram.use();
 	simpleProgram.setUniformMatrix4f("projection", projection);
 	simpleProgram.setUniform4f("color", 0.2f, 0.2f, 0.8f, 1.0f);
-	//seguir copiant!
+
 	modelview = glm::translate(glm::mat4(1.0f), glm::vec3(128.f, 48.f, 0.f));
 	modelview = glm::translate(modelview, glm::vec3(64.f, 64.f, 0.f));
 	modelview = glm::rotate(modelview, -currentTime / 1000.f, glm::vec3(0.0f, 0.0f, 1.0f));
@@ -118,7 +92,7 @@ void Scene::render()
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texQuad[2]->render(texs[1]);
 	
-	text.render("Rebots: ", glm::vec2(10, CAMERA_HEIGHT-20), 32, glm::vec4(1, 1, 1, 1));
+	text.render("Videogames!!!", glm::vec2(10, CAMERA_HEIGHT-20), 32, glm::vec4(1, 1, 1, 1));
 }
 
 void Scene::initShaders()
