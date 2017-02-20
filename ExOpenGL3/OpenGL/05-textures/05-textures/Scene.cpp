@@ -30,17 +30,18 @@ void Scene::init()
 	//Bolet
 	texCoords[0] = glm::vec2(0.f, 0.5f); texCoords[1] = glm::vec2(0.5f, 1.f);
 	texQuad[0] = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
-	//Mario
-	texCoords[0] = glm::vec2(0.f, 0.f); texCoords[1] = glm::vec2(0.5f, 0.5f);
-	texQuad[1] = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
 	//Terra
 	texCoords[0] = glm::vec2(0.f, 0.f); texCoords[1] = glm::vec2(5.f, 1.f);
 	texQuad[2] = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
 	//Mr.Orange
 	texCoords[0] = glm::vec2(0.f, 0.f); texCoords[1] = glm::vec2(1.f, 1.f);
 	texQuad[3] = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
+	//Mario
+	geom[0] = glm::vec2(0.f, 0.f); geom[1] = glm::vec2(128.f, 128.f);
+	texCoords[0] = glm::vec2(0.f, 0.f); texCoords[1] = glm::vec2(0.5f, 0.5f);
+	texQuad[1] = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
 	//Clouds
-	geom[0] = glm::vec2(0.f, 0.f); geom[1] = glm::vec2(800.f, 583.f);
+	geom[0] = glm::vec2(0.f, 0.f); geom[1] = glm::vec2(CAMERA_WIDTH, CAMERA_HEIGHT);
 	texCoords[0] = glm::vec2(0.f, 0.f); texCoords[1] = glm::vec2(1.f, 1.f);
 	texQuad[4] = TexturedQuad::createTexturedQuad(geom, texCoords, texProgram);
 	// Load textures
