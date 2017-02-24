@@ -147,8 +147,8 @@ void Scene::render()
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texQuad[3]->render(texs[2]);
 
-	//string msg = "Rebots: " + rebots;
 	text.render("Rebots: " + std::to_string(rebots), glm::vec2(10, CAMERA_HEIGHT-20), 32, glm::vec4(1, 1, 1, 1));
+	text.render("Bolet!", glm::vec2((move + 1)/ 2.f *CAMERA_WIDTH - 32, 304.f), 32, glm::vec4(1, 1, 1, 1));
 }
 
 void Scene::initShaders()
