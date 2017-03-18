@@ -3,7 +3,8 @@
 
 
 #include "Scene.h"
-
+#include "Pause.h"
+#include "MainMenu.h"
 
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
@@ -43,8 +44,11 @@ public:
 	bool getSpecialKey(int key) const;
 
 private:
+	int game_status;
 	bool bPlay;                       // Continue to play game?
 	Scene scene;                      // Scene to render
+	MainMenu menu;
+	Pause pause;
 	bool keys[256], specialKeys[256]; // Store key states so that 
 	                                  // we can have access at any time
 

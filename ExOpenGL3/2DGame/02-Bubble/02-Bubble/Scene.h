@@ -5,7 +5,9 @@
 #include <glm/glm.hpp>
 #include "ShaderProgram.h"
 #include "TileMap.h"
+#include "EntityMap.h"
 #include "Player.h"
+#include "Gui.h"
 
 
 // Scene contains all the entities of our game.
@@ -22,12 +24,16 @@ public:
 	void init();
 	void update(int deltaTime);
 	void render();
-
+	ShaderProgram& getProgram();
 private:
 	void initShaders();
 
 private:
+	EntityMap *entities;
 	TileMap *map;
+	TileMap *background;
+	TileMap *foreground;
+	Gui *gui;
 	Player *player;
 	ShaderProgram texProgram;
 	float currentTime;
