@@ -9,13 +9,7 @@
 #define JUMP_ANGLE_STEP 4
 #define JUMP_HEIGHT 96
 #define FALL_STEP 4
-#define STEP = 32;
-
-
-enum PlayerAnims
-{
-	STAND_LEFT, STAND_RIGHT, MOVE_LEFT, MOVE_RIGHT, JUMP_RUNNING_RIGHT, JUMP_RUNNING_LEFT
-};
+#define STEP 32;
 
 
 void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
@@ -42,6 +36,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 		sprite->addKeyframe(STAND_RIGHT, glm::vec2(0.f, 0.f));
 		
 		sprite->setAnimationSpeed(MOVE_LEFT, 10);
+		sprite->addKeyframe(MOVE_LEFT, glm::vec2(-1 * stepX, 0.f));
 		sprite->addKeyframe(MOVE_LEFT, glm::vec2(-1*stepX, stepY));
 		sprite->addKeyframe(MOVE_LEFT, glm::vec2(-2*stepX, stepY));
 		sprite->addKeyframe(MOVE_LEFT, glm::vec2(-3*stepX, stepY));
@@ -111,76 +106,124 @@ void Player::update(int deltaTime)
 	switch (state) {
 	case STANDING_RIGHT:
 		if (right) {
-			state = RUN_RIGHT;
-			sprite->changeAnimation(MOVE_RIGHT);
+			setState(RUN_RIGHT);
+			setAnimation(MOVE_RIGHT);
 		}
 		if (left) {
-			state = STANDING_LEFT;
-			sprite->changeAnimation(STAND_LEFT);
+			setState(STANDING_LEFT);
+			setAnimation(STAND_LEFT);
 		}
 		if (up) {
 			state = JUMP_RIGHT;
-			sprite->changeAnimation(JUMP_RUNNING_RIGHT);
+			setAnimation(JUMP_RUNNING_RIGHT);
 		}
 		break;
 	case STANDING_LEFT:
 		if (left) {
-			state = RUN_LEFT;
-			sprite->changeAnimation(MOVE_LEFT);
+			setState(RUN_LEFT);
+			setAnimation(MOVE_LEFT);
 		}
 		if (right) {
-			state = STANDING_RIGHT;
-			sprite->changeAnimation(STAND_RIGHT);
+			setState(STANDING_RIGHT);
+			setAnimation(STAND_RIGHT);
 		}
 		break;
 	case RUN_LEFT:
 		if (right) {
-			state = STANDING_RIGHT;
-			sprite->changeAnimation(STAND_RIGHT);
+			setState(STANDING_RIGHT);
+			setAnimation(STAND_RIGHT);
 		}
 		if (up) {
-			state = JUMP_LEFT;
-			sprite->changeAnimation(JUMP_RUNNING_LEFT);
+			setState(JUMP_LEFT);
+			setAnimation(JUMP_RUNNING_LEFT);
+		}
+		else if (posPlayer.x % 64 == 0 && posPlayer != posStartAnim && !left) {
+			setState(STANDING_LEFT);
+			setAnimation(STAND_LEFT);
 		}
 		else {
-			posPlayer.x -= 2;
+			posPlayer.x -= 1;
 			if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 64))) {
-				posPlayer.x += 2;
-				sprite->changeAnimation(STAND_LEFT);
+				posPlayer.x += 1;
+				setState(STANDING_LEFT);
+				setAnimation(STAND_LEFT);
 			}
 		}
 		break;
 	case RUN_RIGHT:
 		if (left) {
-			state = STANDING_LEFT;
-			sprite->changeAnimation(STAND_LEFT);
+			setState(STANDING_LEFT);
+			setAnimation(STAND_LEFT);
 		}
 		if (up) {
-			state = JUMP_RIGHT;
-			sprite->changeAnimation(JUMP_RUNNING_RIGHT);
+			setState(JUMP_RIGHT);
+			setAnimation(JUMP_RUNNING_RIGHT);
+		}
+		else if (posPlayer.x % 64 == 0 && posPlayer != posStartAnim && !right) {
+			//frenada
+			setAnimation(STAND_RIGHT);
+			setState(STANDING_RIGHT);
 		}
 		else {
-			posPlayer.x += 2;
+			posPlayer.x += 1;
 			if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 64)))
 			{
-				posPlayer.x -= 2;
-				sprite->changeAnimation(STAND_RIGHT);
+				posPlayer.x -= 1;
+				setAnimation(STAND_RIGHT);
+				setState(STANDING_RIGHT);
 			}
 		}
 		break;
 	case JUMP_RIGHT:
 		if (right) {
-			state = STANDING_RIGHT;
-			sprite->changeAnimation(STAND_RIGHT);
+			setState(STANDING_RIGHT);
+			setAnimation(STAND_RIGHT);
 		}
 		break;
 	case JUMP_LEFT:
 		if (left) {
-			state = STANDING_LEFT;
-			sprite->changeAnimation(STAND_LEFT);
+			setState(STANDING_LEFT);
+			setAnimation(STAND_LEFT);
 		}
 		break;
 	}
+
+
+	//YOLO
+	if (bJumping)
+	{
+		jumpAngle += JUMP_ANGLE_STEP;
+		if (jumpAngle == 180)
+		{
+			bJumping = false;
+			posPlayer.y = startY;
+		}
+		else
+		{
+			posPlayer.y = int(startY - 96 * sin(3.14159f * jumpAngle / 180.f));
+			if (jumpAngle > 90)
+				if (bJumping = !map->collisionMoveDown(posPlayer, glm::ivec2(32, 64), &posPlayer.y)) {
+					if (facingRight) sprite->changeAnimation(STAND_RIGHT);
+					else sprite->changeAnimation(STAND_LEFT);
+				}
+
+		}
+	}
+	else
+	{
+		posPlayer.y += FALL_STEP;
+		if (map->collisionMoveDown(posPlayer, glm::ivec2(32, 64), &posPlayer.y))
+		{
+			if (up)
+			{
+				if (sprite->animation() != JUMP_RUNNING_RIGHT) sprite->changeAnimation(JUMP_RUNNING_RIGHT);
+				bJumping = true;
+				jumpAngle = 0;
+				startY = posPlayer.y;
+			}
+		}
+	}
+
 	/*
 	if(left)
 	{
@@ -275,6 +318,15 @@ void Player::input() {
 	up = Game::instance().getSpecialKey(GLUT_KEY_UP);
 	down = Game::instance().getSpecialKey(GLUT_KEY_DOWN);
 	//shift = left = Game::instance().getSpecialKey(..);
+}
+
+void Player::setState(PlayerState newState) {
+	state = newState;
+}
+
+void Player::setAnimation(PlayerAnims newAnim) {
+	sprite->changeAnimation(newAnim);
+	posStartAnim = posPlayer;
 }
 
 
