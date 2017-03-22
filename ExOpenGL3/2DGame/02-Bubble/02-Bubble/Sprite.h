@@ -30,17 +30,18 @@ public:
 	void setAnimationSpeed(int animId, int keyframesPerSec);
 	void addKeyframe(int animId, const glm::vec2 &frame);
 	void changeAnimation(int animId);
+	int getCurrentKeyframe();
 	int animation() const;
-	
-	void setPosition(const glm::vec2 &pos);
 
+	void setPosition(const glm::vec2 &pos);
+	glm::vec2 position;
 private:
 	Texture *texture;
 	ShaderProgram *shaderProgram;
 	GLuint vao;
 	GLuint vbo;
 	GLint posLocation, texCoordLocation;
-	glm::vec2 position;
+
 	int currentAnimation, currentKeyframe;
 	float timeAnimation;
 	glm::vec2 texCoordDispl;
@@ -50,4 +51,3 @@ private:
 
 
 #endif // _SPRITE_INCLUDE
-

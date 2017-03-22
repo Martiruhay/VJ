@@ -1,5 +1,6 @@
 #ifndef _ENTITY_MAP_INCLUDE
 #define _ENTITY_MAP_INCLUDE
+#pragma once
 #include <glm/glm.hpp>
 #include "Sprite.h"
 #include "ShaderProgram.h"
@@ -24,7 +25,7 @@ public:
 	void render() const;
 	void update(int delta);
 	void free();
-
+	void interactEntitiesWithActor(GameActor &actor);
 	int getTileSize() const { return tileSize; }
 
 private:
@@ -36,7 +37,7 @@ private:
 	int tileSize, blockSize;
 	glm::vec2 tileTexSize;
 	Texture spritesheet;
-	std::vector<Entity*> entities;
+	std::vector<Entity* > entities;
 	//std::vector<Entity> *map;
 
 };

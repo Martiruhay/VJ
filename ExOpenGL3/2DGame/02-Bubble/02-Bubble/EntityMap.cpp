@@ -35,6 +35,7 @@ void EntityMap::update(int deltaTime)
 {
 	for (int i = 0; i < entities.size(); i++){
 		entities[i]->update(deltaTime);
+		
 	}
 }
 void EntityMap::render() const
@@ -49,7 +50,20 @@ void EntityMap::free()
 {
 
 }
-
+void EntityMap::interactEntitiesWithActor(GameActor &actor){
+	glm::vec2 actorPos = actor.position_col;
+	glm::vec2 actorSize = actor.size;
+	for (int i = 0; i < entities.size(); i++){
+		if (entities[i]->collides(actorPos, actorSize)) {
+			bool destroy = entities[i]->action(actor);
+			if (destroy) {
+				delete entities[i];
+				entities.erase(entities.begin() + i);
+			}
+		}
+			
+	}
+}
 bool EntityMap::loadLevel(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program)
 {
 
@@ -85,7 +99,7 @@ bool EntityMap::loadLevel(const string &levelFile, const glm::vec2 &minCoords, S
 		{
 			fin.get(tile);
 			//if (tile != ' ') map[j*mapSize.x + i].init(minCoords, program, tile - int('0'));
-			if (tile == '1' || tile == '2' || tile == '3' || tile == '4' || tile == '5') {
+			if (tile == '1' || tile == '2' || tile == '3' || tile == '4' || tile == '5' || tile == '6') {
 				Entity *ent = new Entity();
 				ent->init(minCoords, glm::ivec2(i *tileSize, j * tileSize), program,spritesheet, tile - int('0'));
 				entities.push_back(ent);
